@@ -6,7 +6,7 @@
 
     <div>
         <p>Items: {{ order.get_cart_items }}</p>
-        <p>Total: {{ order.get_cart_total }} PLN</p>
+        <p>Total: {{ order.get_cart_total|floatformat:2 }} PLN</p>
     </div>
     <div>
         {% for item in items %}
@@ -15,7 +15,7 @@
             <div>{{ item.product.name }}</div>
             <div>{{ item.product.price|floatformat:2 }}</div>
             <div>x{{ item.quantity }}</div>
-            <div>{{ item.get_total }}</div>
+            <div>{{ item.get_total|floatformat:2 }}</div>
         </div>
         {% endfor %}
     </div>
