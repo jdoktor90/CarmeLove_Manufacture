@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
-from django.db.models import BooleanField, CASCADE, CharField, DecimalField, \
-    FloatField, ForeignKey, ImageField, \
+from django.db.models import BooleanField, CASCADE, CharField, DateTimeField, DecimalField, \
+    F, FloatField, ForeignKey, ImageField, \
     IntegerField, Model, OneToOneField, SET_NULL, TextField
 
 
@@ -68,4 +68,24 @@ class Product(Model):
         else:
             url = ''
         return url
+
+
+class Order(Model):
+    class Meta:
+        verbose_name = 'Order'
+        verbose_name_plural = 'Orders'
+
+    customer = ForeignKey(Customer, on_delete=SET_NULL, null=True, blank=True)
+    date_ordered = DateTimeField(auto_now_add=True)
+    complete = BooleanField(default=False, null=True, blank=False)
+    transaction_id = IntegerField()
+
+    def __str__(self):
+        return str(self.id)
+
+    @property
+    def transaction_counter(self):
+        transaction_id = Order.objects.all()
+        transaction_id.update(stories_filed=F('stories_filed') + 1)
+        return transaction_id
 
