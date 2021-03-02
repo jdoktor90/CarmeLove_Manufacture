@@ -89,6 +89,18 @@ class Order(Model):
         transaction_id.update(stories_filed=F('stories_filed') + 1)
         return transaction_id
 
+    @property
+    def get_cart_total(self):
+        orderitems = self.orderitem_set.all()
+        total = sum([item.get_total for item in orderitems])
+        return total
+
+    @property
+    def get_cart_items(self):
+        orderitems = self.orderitem_set.all()
+        total = sum([item.quantity for item in orderitems])
+        return total
+
 
 class OrderItem(Model):
     product = ForeignKey(Product, on_delete=SET_NULL, null=True, blank=True)
