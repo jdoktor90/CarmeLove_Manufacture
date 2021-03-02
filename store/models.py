@@ -89,3 +89,14 @@ class Order(Model):
         transaction_id.update(stories_filed=F('stories_filed') + 1)
         return transaction_id
 
+
+class OrderItem(Model):
+    product = ForeignKey(Product, on_delete=SET_NULL, null=True, blank=True)
+    order = ForeignKey(Order, on_delete=SET_NULL, null=True, blank=True)
+    quantity = IntegerField(default=0, null=True, blank=True)
+    date_added = DateTimeField(auto_now_add=True)
+
+    @property
+    def get_total(self):
+        total = self.product.price * self.quantity
+        return total
