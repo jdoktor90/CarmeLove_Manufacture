@@ -21,3 +21,9 @@ def cart(request):
     context = {'items': items, 'order': order}
     return render(request, 'cart.html', context)
 
+
+def checkout(request):
+    context = {}
+    return render(request, 'checkout.html', context)
+
+
