@@ -13,7 +13,47 @@
         <img src="{{ product.imageURL }}">
         <div>
             <strong>{{ product.name }}</strong>
-            <p>{{ product.price|floatformat:2 }}</p>
+            <p>category: {{ product.category }}</p>
+
+            {% if product.measure == 1 %}
+                <p>Kind of measure: By Weight</p>
+            {% else %}
+                <p>Kind of measure: By Quantity</p>
+            {% endif %}
+
+            {% if product.package == 1 %}
+                <p>Package size: 100 gr</p>
+            {% elif product.package == 2 %}
+                <p>Package size: 250 gr</p>
+            {% elif product.package == 3 %}
+                <p>Package size: 500 gr</p>
+            {% elif product.package == 4 %}
+                <p>Package size: 1 kg</p>
+            {% elif product.package == 5 %}
+                <p>Package size: 1</p>
+            {% elif product.package == 6 %}
+                <p>Package size: 4</p>
+            {% elif product.package == 7 %}
+                <p>Package size: 6</p>
+            {% elif product.package == 8 %}
+                <p>Package size: 12</p>
+            {% else %}
+                <p>Package size: 24</p>
+            {% endif %}
+
+            <p>description: {{ product.description }}</p>
+            <p>price: {{ product.price|floatformat:2 }} PLN</p>
+            <p>availability: {{ product.availability }}</p>
+
+            {% if product.weight %}
+                <p>weight: {{ product.weight }} kg</p>
+            {% endif %}
+
+            {% if product.digital %}
+                <p>Digital</p>
+            {% endif %}
+
+            <hr>
         </div>
         {% endfor %}
     </div>

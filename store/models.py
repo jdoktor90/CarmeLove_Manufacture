@@ -1,6 +1,16 @@
-from django.db.models import BooleanField, CharField, DecimalField, \
-    FloatField, ForeignKey, ImageField, \
-    IntegerField, Model, SET_NULL, TextField
+from django.contrib.auth.models import User
+from django.db.models import BooleanField, CASCADE, CharField, DateTimeField, DecimalField, \
+    F, FloatField, ForeignKey, ImageField, \
+    IntegerField, Model, OneToOneField, SET_NULL, TextField
+
+
+class Customer(Model):
+    user = OneToOneField(User, null=True, blank=True, on_delete=CASCADE)
+    name = CharField(max_length=70, null=True)
+    email = CharField(max_length=40, null=True)
+
+    def __str__(self):
+        return self.name
 
 
 class Category(Model):
@@ -59,3 +69,46 @@ class Product(Model):
             url = ''
         return url
 
+
+class Order(Model):
+    class Meta:
+        verbose_name = 'Order'
+        verbose_name_plural = 'Orders'
+
+    customer = ForeignKey(Customer, on_delete=SET_NULL, null=True, blank=True)
+    date_ordered = DateTimeField(auto_now_add=True)
+    complete = BooleanField(default=False, null=True, blank=False)
+    transaction_id = IntegerField()
+
+    def __str__(self):
+        return str(self.id)
+
+    @property
+    def transaction_counter(self):
+        transaction_id = Order.objects.all()
+        transaction_id.update(stories_filed=F('stories_filed') + 1)
+        return transaction_id
+
+    @property
+    def get_cart_total(self):
+        orderitems = self.orderitem_set.all()
+        total = sum([item.get_total for item in orderitems])
+        return total
+
+    @property
+    def get_cart_items(self):
+        orderitems = self.orderitem_set.all()
+        total = sum([item.quantity for item in orderitems])
+        return total
+
+
+class OrderItem(Model):
+    product = ForeignKey(Product, on_delete=SET_NULL, null=True, blank=True)
+    order = ForeignKey(Order, on_delete=SET_NULL, null=True, blank=True)
+    quantity = IntegerField(default=0, null=True, blank=True)
+    date_added = DateTimeField(auto_now_add=True)
+
+    @property
+    def get_total(self):
+        total = self.product.price * self.quantity
+        return total
