@@ -1,4 +1,7 @@
+import datetime
+
 from django.shortcuts import render
+from django.http import JsonResponse
 
 from .models import Customer, Category, Product, Order, OrderItem
 
@@ -35,5 +38,15 @@ def checkout(request):
 
     context = {'items': items, 'order': order, 'cart_items': cart_items}
     return render(request, 'checkout.html', context)
+
+
+def process_order(request):
+    transaction_id = datetime.datetime.now().timestamp()
+    if request.user.is_authenticated:
+        customer = request.user.customer
+        order, created = Order.objects.get_or_create(customer=customer, complete=False)
+    else:
+        print('User is not logged in...')
+    return JsonResponse('Payment submitted...', safe=False)
 
 
