@@ -24,6 +24,8 @@ def cart(request):
     context = {'items': items, 'order': order}
     return render(request, 'cart.html', context)
 
+def update_item(request):
+    return JsonResponse('Product was added', safe=False)
 
 def checkout(request):
     if request.user.is_authenticated:
