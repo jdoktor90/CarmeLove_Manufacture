@@ -3,8 +3,12 @@ from django.urls import path
 from .views import *
 
 urlpatterns = [
-    path('', store, name='store'),
-    path('cart/', cart, name='cart'),
-    path('update_item/', update_item, name='update_item'),
+    #Leave as empty string for base url
+    path('', views.store, name="store"),
+    path('cart/', views.cart, name="cart"),
+    path('checkout/', views.checkout, name="checkout"),
+    path('update_item/', views.updateItem, name="update_item"),
+    path('process_order/', views.processOrder, name="process_order"),
+
 ]
 

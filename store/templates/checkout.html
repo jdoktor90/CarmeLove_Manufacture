@@ -1,0 +1,39 @@
+{% extends 'main.html' %}
+{% load static %}
+{% block content %}
+
+<h1>Checkout</h1>
+
+    <div>
+        <form>
+            <!--        javascript for form -->
+            {% csrf_token %}
+
+        </form>
+        <div>Shipping Information</div>
+            <!--        javascript for shipping -->
+    </div>
+
+    <div>Paypal Options</div>
+        <!--        javascript for paypal -->
+
+    <div>
+        <a href="{% url 'cart' %}">Back to Cart</a>
+        <p>Order Summary</p>
+
+        {% for item in items %}
+        <div>
+            <div><img src="{{ item.product.imageURL }}"></div>
+            <div>{{ item.product.name }}</div>
+            <div>{{ item.product.price|floatformat:2 }}</div>
+            <div>x{{ item.quantity }}</div>
+            <div>{{ item.get_total|floatformat:2 }}</div>
+        </div>
+        {% endfor %}
+
+        <p>Items: {{ order.get_cart_items }}</p>
+        <p>Total: {{ order.get_cart_total|floatformat:2 }} PLN</p>
+    </div>
+
+{% endblock content %}
+

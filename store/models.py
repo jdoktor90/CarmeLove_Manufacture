@@ -90,6 +90,15 @@ class Order(Model):
         return transaction_id
 
     @property
+    def shipping(self):
+        shipping = False
+        orderitems = self.orderitem_set.all()
+        for i in orderitems:
+            if i.product.digital is False:
+                shipping = True
+        return shipping
+
+    @property
     def get_cart_total(self):
         orderitems = self.orderitem_set.all()
         total = sum([item.get_total for item in orderitems])
@@ -112,3 +121,17 @@ class OrderItem(Model):
     def get_total(self):
         total = self.product.price * self.quantity
         return total
+
+
+class ShippingAddress(Model):
+    customer = ForeignKey(Customer, on_delete=SET_NULL, null=True, blank=True)
+    order = ForeignKey(Order, on_delete=SET_NULL, null=True, blank=True)
+    address = CharField(max_length=200, null=False)
+    city = CharField(max_length=200, null=False)
+    state = CharField(max_length=200, null=False)
+    zipcode = CharField(max_length=200, null=False)
+    date_added = DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.address
+
