@@ -52,6 +52,7 @@
             {% if product.digital %}
                 <p>Digital</p>
             {% endif %}
+            <a href="{% url 'product' product.id %}">More...</a>
 
             <hr>
         </div>
@@ -59,3 +60,4 @@
     </div>
 
 {% endblock content %}
+
