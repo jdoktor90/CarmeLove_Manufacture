@@ -135,3 +135,15 @@ class ShippingAddress(Model):
     def __str__(self):
         return self.address
 
+
+class ProductOpinion(Model):
+    product = ForeignKey(Product, on_delete=SET_NULL, null=True, blank=True)
+    customer = ForeignKey(Customer, on_delete=SET_NULL, null=True, blank=True)
+    rating = IntegerField(null=True, blank=True)
+    title = TextField(max_length=250, null=True, blank=True)
+    opinion = TextField(max_length=1500, null=True, blank=True)
+    date_created = DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title
+
