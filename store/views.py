@@ -75,17 +75,17 @@ def product(request, product_id):
         items = order.orderitem_set.all()
         cart_items = order.get_cart_items
         form = ProductOpinionForm()
-        product = Product.objects.get(id=product_id)
-        opinions = ProductOpinion.objects.filter(product=product)
+        viewed_product = Product.objects.get(id=product_id)
+        opinions = ProductOpinion.objects.filter(product=viewed_product)
         if request.method == 'POST':
             form = ProductOpinionForm(request.POST)
             if form.is_valid():
                 new_opinion = form.save(commit=False)
                 new_opinion.customer = request.user.customer
-                new_opinion.product = product
+                new_opinion.product = viewed_product
                 new_opinion.save()
                 user_new_opinion = new_opinion
-                context = {'product': product,
+                context = {'product': viewed_product,
                            'form': form,
                            'user_new_opinion': user_new_opinion,
                            'opinions': opinions,
@@ -95,6 +95,9 @@ def product(request, product_id):
         items = []
         order = {'get_cart_total': 0, 'get_cart_items': 0, 'shipping': False}
         cart_items = order['get_cart_items']
+        # for now it's the only idea I have, it's working, but view is too fat.
+        # maybe JS or/and CSS will help?
+        form = None
 
     viewed_product = Product.objects.get(id=product_id)
     opinions = ProductOpinion.objects.filter(product=viewed_product)
