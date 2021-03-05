@@ -10,6 +10,21 @@ from .models import Customer, Category, Product, Order, OrderItem, ProductOpinio
 from .forms import ProductOpinionForm
 
 
+def home(request):
+    if request.user.is_authenticated:
+        customer = request.user.customer
+        order, created = Order.objects.get_or_create(customer=customer, complete=False)
+        items = order.orderitem_set.all()
+        cart_items = order.get_cart_items
+    else:
+        items = []
+        order = {'get_cart_total': 0, 'get_cart_items': 0, 'shipping': False}
+        cart_items = order['get_cart_items']
+    about = 'Hi! We are small Manufacture of Sweets!'
+    context = {'cart_items': cart_items, 'about': about}
+    return render(request, 'home.html', context)
+
+
 def store(request):
     if request.user.is_authenticated:
         customer = request.user.customer
