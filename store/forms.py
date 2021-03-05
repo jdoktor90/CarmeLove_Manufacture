@@ -9,8 +9,8 @@ class ProductOpinionForm(ModelForm):
         model = ProductOpinion
         fields = '__all__'
 
-    rating = IntegerField(min_value=1, max_value=5)
-    title = CharField(widget=TextInput(attrs={'placeholder': 'Title of opinion...'}), max_length=250)
-    opinion = CharField(widget=Textarea(attrs={'placeholder': 'Opinion...'}), max_length=1500)
+    rating = IntegerField(min_value=1, max_value=5, required=False)
+    title = CharField(widget=TextInput(attrs={'placeholder': 'Title of opinion...'}), max_length=250, required=False)
+    opinion = CharField(widget=Textarea(attrs={'placeholder': 'Opinion...'}), max_length=1500, required=False)
 
 

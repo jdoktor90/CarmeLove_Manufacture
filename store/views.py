@@ -1,7 +1,7 @@
 import datetime
 
-from django.shortcuts import render, HttpResponseRedirect
-from django.http import JsonResponse
+from django.shortcuts import render, HttpResponseRedirect, redirect
+from django.http import JsonResponse, HttpResponse
 from django.urls import reverse, reverse_lazy
 from django.contrib import messages
 from django.views.generic import CreateView
@@ -74,25 +74,23 @@ def product(request, product_id):
         order, created = Order.objects.get_or_create(customer=customer, complete=False)
         items = order.orderitem_set.all()
         cart_items = order.get_cart_items
-
-        # if request.method == 'GET':
-        #     kwargs = {}
-        #     kwargs['opinion_create'] = ProductOpinionForm(prefix='opinion_create')
-        #     return render(request, 'product.html', kwargs)
-        # elif request.method == 'POST':
-        #     form = ProductOpinionForm(data=request.POST,
-        #                               prefix='opinion_create')
-        #     if form.is_valid():
-        #         new_opinion = form.save(commit=False)
-        #         new_opinion.user = request.user
-        #         new_opinion.save()
-        #         messages.success(request, 'Your opinion has been added successfully!')
-        #         return HttpResponseRedirect('product',
-        #                                     kwargs={
-        #                                         'opinion_id': new_opinion.id
-        #                                     })
-        # messages.error(request, 'Invalid data, your opinion has not been saved.')
-        # return HttpResponseRedirect(reverse('product'))
+        form = ProductOpinionForm()
+        product = Product.objects.get(id=product_id)
+        opinions = ProductOpinion.objects.filter(product=product)
+        if request.method == 'POST':
+            form = ProductOpinionForm(request.POST)
+            if form.is_valid():
+                new_opinion = form.save(commit=False)
+                new_opinion.customer = request.user.customer
+                new_opinion.product = product
+                new_opinion.save()
+                user_new_opinion = new_opinion
+                context = {'product': product,
+                           'form': form,
+                           'user_new_opinion': user_new_opinion,
+                           'opinions': opinions,
+                           'cart_items': cart_items}
+                return render(request, 'product.html', context)
     else:
         items = []
         order = {'get_cart_total': 0, 'get_cart_items': 0, 'shipping': False}
@@ -100,7 +98,7 @@ def product(request, product_id):
 
     viewed_product = Product.objects.get(id=product_id)
     opinions = ProductOpinion.objects.filter(product=viewed_product)
-    context = {'product': viewed_product, 'opinions': opinions, 'cart_items': cart_items}
+    context = {'product': viewed_product, 'form': form, 'opinions': opinions, 'cart_items': cart_items}
     return render(request, 'product.html', context)
 
 

@@ -51,10 +51,12 @@
 </div>
 
 <div>
-    <form>
+    <form method="post">
         {% csrf_token %}
-        <p>{{ form.as_p }}</p>
-        <input type="submit" value="Submit">
+        <p>Stars: {{ form.rating }}</p>
+        <p>Title: {{ form.title }}</p>
+        <p>Opinion: {{ form.opinion }}</p>
+        <input type="submit" value="Submit" name="Create Opinion">
     </form>
 </div>
 
@@ -62,12 +64,19 @@
     {% if opinions %}
         {% for opinion in opinions %}
             <div>
+                {% if opinion.rating %}
                 <p>Rating (Stars): {{ opinion.rating }}</p>
+                {% endif %}
+                {% if opinion.title %}
                 <p>Title: {{ opinion.title }}</p>
+                {% endif %}
+                {% if opinion.opinion %}
                 <p>Opinion: {{ opinion.opinion }}</p>
+                {% endif %}
                 <p>Customer: {{ opinion.customer }}</p>
                 <p>Date: {{ opinion.date_created }}</p>
             </div>
+            <hr>
         {% endfor %}
     {% else %}
         <p>This product has no opinin yet. You can be first!</p>
