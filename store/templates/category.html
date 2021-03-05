@@ -1,0 +1,21 @@
+{% extends 'main.html' %}
+{% load static %}
+{% block content %}
+
+    {{ category.name }}
+
+    <div>
+        {% for product in products %}
+            <img src="{{ product.imageURL }}">
+            <div>
+                <strong>{{ product.name }}</strong>
+                <p>category: {{ product.category }}</p>
+                <a href="{% url 'product' product.id %}">More...</a>
+
+                <hr>
+            </div>
+        {% endfor %}
+    </div>
+
+{% endblock content %}
+
